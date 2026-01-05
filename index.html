@@ -279,8 +279,8 @@
       backdrop-filter: blur(20px);
       box-shadow: 5px 0 25px rgba(0, 0, 0, 0.1);
       z-index: 1001;
-      padding: 2rem;
-      transition: left 0.4s ease;
+      padding: 2rem 1.5rem;
+      transition: left 0.5s ease-in-out;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -1573,8 +1573,9 @@
             <a href="https://www.linkedin.com/company/dear-future-luminary" target="_blank"><i class="fab fa-linkedin-in"></i></a>
           </div>
           <button id="joinTeamButton" class="cta-button" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--highlight); color: var(--text-color); text-decoration: none; font-weight: 600; border-radius: var(--border-radius); transition: all 0.3s ease; font-size: 0.9rem; border: none; cursor: pointer;">Join Us (Team) <i class="fas fa-arrow-right"></i></button>
-          <button id="newsletterButton" class="cta-button" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--highlight); color: var(--text-color); text-decoration: none; font-weight: 600; border-radius: var(--border-radius); transition: all 0.3s ease; font-size: 0.9rem; border: none; cursor: pointer;">Join Our Newsletter <i class="fas fa-arrow-right"></i></button>
         </div>
+      <button id="joinTeamButton" class="cta-button" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--highlight); color: var(--text-color); text-decoration: none; font-weight: 600; border-radius: var(--border-radius); transition: all 0.3s ease; font-size: 0.9rem; border: none; cursor: pointer;">Join Us (Team) <i class="fas fa-arrow-right"></i></button>
+      </div>
       </div>
       <div class="footer-bottom">
         <p>Developed by Malak Emad © 2025 Dear Future Luminary. All rights reserved.</p>
@@ -1625,10 +1626,10 @@
     </div>
   </div>
 
-  <script type="text/javascript" src="//downloads.mailchimp.com/js/signup-forms/popup/unique-methods/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script>
-
   <script>
-    // Preloader Fix: Ensure the loader disappears after content loads
+    'use strict';
+
+    // Preloader Handler
     const loader = document.getElementById('loader');
     if (loader) {
       const hideLoader = () => {
@@ -1647,7 +1648,7 @@
       }
     }
 
-    // Navbar scroll effect
+    // Navbar Scroll Effect
     const navbar = document.getElementById('navbar');
     if (navbar) {
       window.addEventListener('scroll', () => {
@@ -1659,31 +1660,26 @@
       });
     }
 
-    // Sidebar functionality
+    // Sidebar Functionality
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
     const sidebarClose = document.getElementById('sidebarClose');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
 
     if (sidebarToggle && sidebar && sidebarClose && sidebarOverlay) {
+      const toggleSidebar = (show) => {
+        sidebar.classList.toggle('active', show);
+        sidebarOverlay.classList.toggle('active', show);
+        document.body.style.overflow = show ? 'hidden' : 'auto';
+      };
+
       sidebarToggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        sidebar.classList.add('active');
-        sidebarOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        toggleSidebar(true);
       });
 
-      sidebarClose.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        sidebarOverlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-      });
-
-      sidebarOverlay.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        sidebarOverlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-      });
+      sidebarClose.addEventListener('click', () => toggleSidebar(false));
+      sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
     }
 
     // Theme Selector
@@ -1716,7 +1712,7 @@
     const savedTheme = localStorage.getItem('theme') || 'luminary';
     document.body.setAttribute('data-theme', savedTheme);
 
-    // Contact Form
+    // Contact Form Submission
     const contactForm = document.getElementById('contactForm');
     const thankYouPopup = document.getElementById('thankYouPopup');
     const thankYouClose = document.getElementById('thankYouClose');
@@ -1729,9 +1725,7 @@
           const response = await fetch('https://formspree.io/f/xqaqankn', {
             method: 'POST',
             body: formData,
-            headers: {
-              'Accept': 'application/json'
-            }
+            headers: { 'Accept': 'application/json' }
           });
           if (response.ok) {
             thankYouPopup.classList.add('active');
@@ -1755,49 +1749,36 @@
       });
     }
 
-    // Join Team Popup Functionality
+    // Join Team Popup
     const joinTeamButton = document.getElementById('joinTeamButton');
     const joinTeamPopup = document.getElementById('joinTeamPopup');
     const joinTeamPopupClose = document.getElementById('joinTeamPopupClose');
 
     if (joinTeamButton && joinTeamPopup && joinTeamPopupClose) {
-      joinTeamButton.addEventListener('click', () => {
-        joinTeamPopup.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      });
+      const toggleJoinPopup = (show) => {
+        joinTeamPopup.classList.toggle('active', show);
+        document.body.style.overflow = show ? 'hidden' : 'auto';
+      };
 
-      joinTeamPopupClose.addEventListener('click', () => {
-        joinTeamPopup.classList.remove('active');
-        document.body.style.overflow = 'auto';
-      });
-
+      joinTeamButton.addEventListener('click', () => toggleJoinPopup(true));
+      joinTeamPopupClose.addEventListener('click', () => toggleJoinPopup(false));
       joinTeamPopup.addEventListener('click', (e) => {
-        if (e.target === joinTeamPopup) {
-          joinTeamPopup.classList.remove('active');
-          document.body.style.overflow = 'auto';
-        }
+        if (e.target === joinTeamPopup) toggleJoinPopup(false);
       });
     }
 
-    // Scroll to Top Button and Theme Toggle Visibility
+    // Scroll to Top and Theme Toggle Visibility
     const scrollToTopButton = document.getElementById('scrollToTop');
     const themeToggleBtn = document.getElementById('themeToggle');
     if (scrollToTopButton && themeToggleBtn) {
       window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-          scrollToTopButton.classList.add('visible');
-          themeToggleBtn.classList.add('visible');
-        } else {
-          scrollToTopButton.classList.remove('visible');
-          themeToggleBtn.classList.remove('visible');
-        }
+        const show = window.scrollY > 300;
+        scrollToTopButton.classList.toggle('visible', show);
+        themeToggleBtn.classList.toggle('visible', show);
       });
 
       scrollToTopButton.addEventListener('click', () => {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     }
 
@@ -1821,7 +1802,7 @@
       let typing = true;
       let text = '';
 
-      function typeWriter() {
+      const typeWriter = () => {
         if (typing) {
           if (i < taglines[currentTagline].length) {
             text += taglines[currentTagline].charAt(i);
@@ -1844,23 +1825,10 @@
             setTimeout(typeWriter, 600);
           }
         }
-      }
+      };
 
       typeWriter();
     }
-
-    // Newsletter Popup Trigger
-    function openNewsletterPopup() {
-      window.dojoRequire(["mojo/signup-forms/Loader"], function(L) { L.start({"baseUrl":"mc.us20.list-manage.com","uuid":"de910d6670f6455b0791bcbb2","lid":"8d285b924df69f29dd98ce32e","uniqueMethods":true}) })
-      document.cookie = "MCPopupClosed=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie = "MCPopupSubscribed=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    }
-    const newsletterButton = document.getElementById('newsletterButton');
-    if (newsletterButton) {
-      newsletterButton.addEventListener('click', openNewsletterPopup);
-    }
   </script>
-  <!-- Mailchimp integration script -->
-  <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/de910d6670f6455b0791bcbb2/8d285b924df69f29dd98ce32e.js");</script>
 </body>
 </html>
